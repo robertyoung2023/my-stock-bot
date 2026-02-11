@@ -3,30 +3,29 @@ name: Stock Daily Summary Bot
 on:
   schedule:
     # 北京时间每天 19:00 运行 (11:00 UTC)
-    # 此时龙虎榜和大宗交易的数据更新最全，不容易漏报
     - cron: '0 11 * * 1-5'
-  workflow_dispatch: # 保留手动运行按钮，方便测试
+  workflow_dispatch: # 保留手动运行按钮
 
 jobs:
   run-bot:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4 # 升级到最新稳定版
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5 # 升级到最新稳定版
+        uses: actions/setup-python@v5
         with:
           python-version: '3.9'
 
       - name: Install dependencies
         run: |
-          # 确保 requirements.txt 里有 akshare, pandas, requests
-          pip install -r requirements.txt
+          # 关键修改点：增加 --upgrade 确保获取包含最新接口的 akshare 版本
+          pip install --upgrade akshare pandas requests
 
       - name: Run script
         env:
-          # 确保你在 Settings -> Secrets 中配置了 PUSHPLUS_TOKEN
+          # 这里的变量名必须和 Settings -> Secrets 中的 Name 一致
           PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
-        # ⚠️ 注意：这里的名称必须和你仓库里的 Python 文件名完全一致
+        # 确保仓库里有 combined_stock_bot.py 这个文件
         run: python combined_stock_bot.py
