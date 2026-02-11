@@ -6,7 +6,7 @@ from datetime import datetime
 
 # ================= 配置区 =================
 # 你的关注列表
-WATCH_LIST = [“605305”] 
+WATCH_LIST = ["605305"] 
 PUSHPLUS_TOKEN = os.environ.get("PUSHPLUS_TOKEN")
 # =========================================
 
