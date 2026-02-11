@@ -1,0 +1,28 @@
+name: Stock Research Notification
+
+on:
+  schedule:
+    # 这里的 cron 是 UTC 时间，10:30 等于北京时间 18:30
+    - cron: '30 10 * * 1-5'
+  workflow_dispatch: # 允许你手动点击按钮运行
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run script
+        env:
+          PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
+        run: python stock_check.py
