@@ -1,28 +1,32 @@
-name: Stock Research Notification
+name: Stock Daily Summary Bot
 
 on:
   schedule:
-    # 这里的 cron 是 UTC 时间，10:30 等于北京时间 18:30
-    - cron: '30 10 * * 1-5'
-  workflow_dispatch: # 允许你手动点击按钮运行
+    # 北京时间每天 19:00 运行 (11:00 UTC)
+    # 此时龙虎榜和大宗交易的数据更新最全，不容易漏报
+    - cron: '0 11 * * 1-5'
+  workflow_dispatch: # 保留手动运行按钮，方便测试
 
 jobs:
   run-bot:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # 升级到最新稳定版
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5 # 升级到最新稳定版
         with:
           python-version: '3.9'
 
       - name: Install dependencies
         run: |
+          # 确保 requirements.txt 里有 akshare, pandas, requests
           pip install -r requirements.txt
 
       - name: Run script
         env:
+          # 确保你在 Settings -> Secrets 中配置了 PUSHPLUS_TOKEN
           PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
-        run: python stock_check.py
+        # ⚠️ 注意：这里的名称必须和你仓库里的 Python 文件名完全一致
+        run: python combined_stock_bot.py
