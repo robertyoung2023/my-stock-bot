@@ -6,7 +6,7 @@ from datetime import datetime
 
 # 从 GitHub Secrets 读取配置
 # 在本地测试时，可以临时手动填写，但提交代码前请改回 os.environ.get
-WATCH_LIST = ["000001", "600519", "300750", "002594"] # 你的关注列表
+WATCH_LIST = ["605305"] # 你的关注列表
 PUSHPLUS_TOKEN = os.environ.get("PUSHPLUS_TOKEN")
 
 def get_research_data():
